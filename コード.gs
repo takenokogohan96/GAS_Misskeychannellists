@@ -33,6 +33,9 @@ function run(){
   rawsheet.getRange(rawsheet_row, 1, rawarrays.length, rawarrays[0].length).setValues(rawarrays);  
   console.log("[3/6] raw書き込み完了")
 
+  //list更新中表示
+  channelsheet.getRange(1,1).setValue("list更新中です。5分程度時間をおいて再度アクセスしてください\nこの表示が出続ける場合は次の自動更新をお待ちください")
+
   //list書き込み部
   for(i = 0;i < channellist.length;i++){
 
