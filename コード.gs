@@ -8,15 +8,17 @@ function run(){
   const instance = "misskey.io"
   var channellist = []
   var addchannellist = []
+  var fetchcount = 0;
 
   //一番最新のチャンネルを取得する
-  channellist = fetch(instance,false)
+  channellist = fetch(instance,false,++fetchcount)
   addchannellist = channellist
-
+  
   //次のチャンネルを取得して配列に追加（結合）する
   while(addchannellist.length != 0){
-    addchannellist = fetch(instance,true,addchannellist[addchannellist.length - 1].id)
+    addchannellist = fetch(instance,true,addchannellist[addchannellist.length - 1].id,++fetchcount)
     Array.prototype.push.apply(channellist,addchannellist)
+
   }
   console.log("[1/6] fetch完了")
   
@@ -59,7 +61,7 @@ function run(){
     channelsheet.getRange(i+channelsheet_row, 6).setValue(Utilities.formatDate(new Date(channellist[i].createdAt), "JST", "yyyy-MM-dd"))//作成日
 
     if((i+1)%500 == 0){
-      console.log(channellist.length + "件中" + (i + 1) + "件書き込み完了")
+      console.log("書き込み数：" + channellist.length + "件中" + (i + 1) + "件")
     }
   }
   console.log("[4/6] list書き込み完了")
@@ -75,7 +77,7 @@ function run(){
 
 }
 
-function fetch(instance,isuntilId,untilId) {
+function fetch(instance,isuntilId,untilId,fetchcount) {
 
   const url = "https://" + instance + "/api/channels/search"
 
@@ -103,7 +105,7 @@ function fetch(instance,isuntilId,untilId) {
   try{
     response = UrlFetchApp.fetch(url, param);
   }catch(e){
-    console.log("Fetch再試行")
+    console.log("Fetch再試行(" + e.message + ")\nfetchcount = " + fetchcount)
     response = UrlFetchApp.fetch(url, param);
   }
   
