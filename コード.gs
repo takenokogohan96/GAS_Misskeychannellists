@@ -71,7 +71,7 @@ function run(){
 
   //更新履歴欄
   var date = new Date();
-  channelsheet.getRange(1,2).setValue("【チャンネル数】" + channellist.length +"　【最終更新日時】" + Utilities.formatDate( date, 'Asia/Tokyo', 'yyyy-MM-dd hh:mm'))
+  channelsheet.getRange(1,2).setValue("【チャンネル数】" + channellist.length +"　【リスト更新日時】" + Utilities.formatDate( date, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm'))
   console.log("[6/6] 更新履歴欄書き込み完了")
 
 }
