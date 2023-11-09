@@ -9,13 +9,6 @@ function run(){
   var channellist = []
   var addchannellist = []
 
-  //各シート初期化
-  rawsheet.getRange(rawsheet_row, 1, rawsheet.getMaxRows(),rawsheet.getLastColumn()).clearContent();
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).clearContent();
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBackground(null);
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setFontColor(null);
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBorder(false,false,false,false,false,false)
-
   //一番最新のチャンネルを取得する
   channellist = fetch(instance,false)
   addchannellist = channellist
@@ -25,18 +18,22 @@ function run(){
     addchannellist = fetch(instance,true,addchannellist[addchannellist.length - 1].id)
     Array.prototype.push.apply(channellist,addchannellist)
   }
-  console.log("[1/4] fetch完了")
+  console.log("[1/6] fetch完了")
   
+  //シート初期化部
+  rawsheet.getRange(rawsheet_row, 1, rawsheet.getMaxRows(),rawsheet.getLastColumn()).clearContent();
+  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).clearContent();
+  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBackground(null);
+  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setFontColor(null);
+  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBorder(false,false,false,false,false,false)
+  console.log("[2/6] シート初期化完了")
+
   //raw書き込み部
   const rawarrays = objectsToArrays(channellist);
   rawsheet.getRange(rawsheet_row, 1, rawarrays.length, rawarrays[0].length).setValues(rawarrays);  
-  console.log("[2/4] raw書き込み完了")
+  console.log("[3/6] raw書き込み完了")
 
-  //チャンネル数書き込み
-  channelsheet.getRange(1,2).setValue("チャンネル数：" + channellist.length)
-  console.log("[3/4] チャンネル数書き込み完了")
-
-  //チャンネル一覧書き込み部
+  //list書き込み部
   for(i = 0;i < channellist.length;i++){
 
     channelsheet.getRange(i+channelsheet_row, 1).setBackground(channellist[i].color) // color
@@ -65,11 +62,17 @@ function run(){
       console.log(channellist.length + "件中" + (i + 1) + "件書き込み完了")
     }
   }
-  console.log("[4/4] list書き込み完了")
-
+  console.log("[4/6] list書き込み完了")
+  
   //罫線
   channelsheet.getRange(channelsheet_row, 1, channelsheet.getLastRow()-1,channelsheet.getLastColumn()).setBorder(true,true,true,true,true,true)
-  
+  console.log("[5/6] 罫線書き込み完了")
+
+  //更新履歴欄
+  var date = new Date();
+  channelsheet.getRange(1,2).setValue("【チャンネル数】" + channellist.length +"　【最終更新日時】" + Utilities.formatDate( date, 'Asia/Tokyo', 'yyyy-MM-dd hh:mm'))
+  console.log("[6/6] 更新履歴欄書き込み完了")
+
 }
 
 function fetch(instance,isuntilId,untilId) {
