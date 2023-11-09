@@ -42,7 +42,8 @@ function run(){
     channelsheet.getRange(i+channelsheet_row, 1).setBackground(channellist[i].color) // color
     
     channellink = "https://" + instance + "" + "/channels/" + channellist[i].id
-    link = `=HYPERLINK("${channellink}", "${channellist[i].name}")`;
+    channelname = channellist[i].name.replace(/"/g, '""');
+    link = `=HYPERLINK("${channellink}", "${channelname}")`;
     channelsheet.getRange(i+channelsheet_row, 2).setFormula(link) // 名前,リンク
 
     channelsheet.getRange(i+channelsheet_row, 3).setValue(channellist[i].description) // 説明
