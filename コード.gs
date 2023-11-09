@@ -25,7 +25,6 @@ function run(){
   rawsheet.getRange(rawsheet_row, 1, rawsheet.getMaxRows(),rawsheet.getLastColumn()).clearContent();
   channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).clearContent();
   channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBackground(null);
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setFontColor(null);
   channelsheet.getRange(channelsheet_row, 1, channelsheet.getMaxRows(),channelsheet.getLastColumn()).setBorder(false,false,false,false,false,false)
   console.log("[2/6] シート初期化完了")
 
@@ -57,7 +56,9 @@ function run(){
     channelsheet.getRange(i+channelsheet_row, 4).setValue(channellist[i].usersCount) // ユーザ数
     channelsheet.getRange(i+channelsheet_row, 5).setValue(channellist[i].notesCount) // ノート数
 
+    /*
     channelsheet.getRange(i+channelsheet_row, 6).setValue(Utilities.formatDate(new Date(channellist[i].createdAt), "JST", "yyyy-MM-dd"))//作成日
+    */
 
     if((i+1)%500 == 0){
       console.log("書き込み数：" + channellist.length + "件中" + (i + 1) + "件")
@@ -66,12 +67,15 @@ function run(){
   console.log("[4/6] list書き込み完了")
   
   //罫線
-  channelsheet.getRange(channelsheet_row, 1, channelsheet.getLastRow()-1,channelsheet.getLastColumn()).setBorder(true,true,true,true,true,true)
-  console.log("[5/6] 罫線書き込み完了")
+  channelsheet.getRange(channelsheet_row, 1, channelsheet.getLastRow()-1,channelsheet.getLastColumn()).setBorder(true,true,true,true,true,true)//罫線設置
+  channelsheet.getRange(channelsheet_row, 2, channelsheet.getLastRow()-1,1).setFontSize(12) //チャンネル名フォントサイズ調整
+  channelsheet.getRange(channelsheet_row, 2, channelsheet.getLastRow()-1,1).setFontLine("none") //チャンネル名アンダーライン削除
+  channelsheet.getRange(channelsheet_row, 2, channelsheet.getLastRow()-1,1).setFontWeight("bold") //チャンネル名太字
+  console.log("[5/6] 書式設定完了")
 
   //更新履歴欄
   var date = new Date();
-  channelsheet.getRange(1,2).setValue("【チャンネル数】" + channellist.length +"　【リスト更新日時】" + Utilities.formatDate( date, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm'))
+  channelsheet.getRange(1,1).setValue("【チャンネル数】" + channellist.length +"　【リスト更新日時】" + Utilities.formatDate( date, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm'))
   console.log("[6/6] 更新履歴欄書き込み完了")
 
 }
