@@ -59,9 +59,17 @@ function run(){
     channelsheet.getRange(i+channelsheet_row, 4).setValue(channellist[i].usersCount) // ユーザ数
     channelsheet.getRange(i+channelsheet_row, 5).setValue(channellist[i].notesCount) // ノート数
 
-    /*
-    channelsheet.getRange(i+channelsheet_row, 6).setValue(Utilities.formatDate(new Date(channellist[i].createdAt), "JST", "yyyy-MM-dd"))//作成日
-    */
+    if(channellist[i].lastNotedAt == null){
+      channelsheet.getRange(i+channelsheet_row, 6).setValue("-")//更新がない
+    }else{
+      let lastnote = new Date(channellist[i].lastNotedAt)
+      let today = new Date();
+      if(today - lastnote < 86400000){
+        channelsheet.getRange(i+channelsheet_row, 6).setValue("つい最近")//更新日
+      }else{
+        channelsheet.getRange(i+channelsheet_row, 6).setValue(Math.floor((today - lastnote) / 86400000) + "日前")//更新日
+      }
+    }
 
     if((i+1)%500 == 0){
       console.log("書き込み数：" + channellist.length + "件中" + (i + 1) + "件")
