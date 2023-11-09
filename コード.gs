@@ -18,9 +18,8 @@ function run(){
   while(addchannellist.length != 0){
     addchannellist = fetch(instance,true,addchannellist[addchannellist.length - 1].id,++fetchcount)
     Array.prototype.push.apply(channellist,addchannellist)
-
   }
-  console.log("[1/6] fetch完了")
+  console.log("[1/6] fetch完了（fetch回数："+ fetchcount +"）")
   
   //シート初期化部
   rawsheet.getRange(rawsheet_row, 1, rawsheet.getMaxRows(),rawsheet.getLastColumn()).clearContent();
