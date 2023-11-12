@@ -30,13 +30,21 @@ function run(){
 
   //raw書き込み部
   const rawarrays = objectsToArrays(channellist);
-  rawsheet.getRange(rawsheet_row, 1, rawarrays.length, rawarrays[0].length).setValues(rawarrays);  
+  rawsheet.getRange(rawsheet_row, 1, rawarrays.length, rawarrays[0].length).setValues(rawarrays);
   console.log("[3/6] raw書き込み完了")
 
   //list更新中表示
   channelsheet.getRange(1,1).setValue("list更新中です。5分程度時間をおいて再度アクセスしてください\nこの表示が出続ける場合は次の自動更新をお待ちください")
 
   //list書き込み部
+  raw_description_range = rawsheet.getRange(rawsheet_row+1,5,rawsheet.getMaxRows(),1)
+  raw_userCount_range = rawsheet.getRange(rawsheet_row+1,11,rawsheet.getMaxRows(),1) 
+  raw_notesCount_range = rawsheet.getRange(rawsheet_row+1,12,rawsheet.getMaxRows(),1)
+  raw_description_range.copyTo(channelsheet.getRange(channelsheet_row, 3),SpreadsheetApp.CopyPasteType.PASTE_VALUES)
+  raw_userCount_range.copyTo(channelsheet.getRange(channelsheet_row, 4),SpreadsheetApp.CopyPasteType.PASTE_VALUES)
+  raw_notesCount_range.copyTo(channelsheet.getRange(channelsheet_row, 5),SpreadsheetApp.CopyPasteType.PASTE_VALUES)
+  console.log("カーボンコピー完了")
+  
   for(i = 0;i < channellist.length;i++){
 
     channelsheet.getRange(i+channelsheet_row, 1).setBackground(channellist[i].color) // color
@@ -45,19 +53,14 @@ function run(){
     channelname = channellist[i].name.replace(/"/g, '""');
     link = `=HYPERLINK("${channellink}", "${channelname}")`;
     channelsheet.getRange(i+channelsheet_row, 2).setFormula(link) // 名前,リンク
-
-    channelsheet.getRange(i+channelsheet_row, 3).setValue(channellist[i].description) // 説明
-
     /*
+
     if(channellist[i].isSensitive == "TRUE"){// センシティブフラグ
       channelsheet.getRange(i+channelsheet_row, 4).setBackground("red").setFontColor("white").setValue("Yes") 
     }else{
       channelsheet.getRange(i+channelsheet_row, 4).setValue("No")
     }
     */
-
-    channelsheet.getRange(i+channelsheet_row, 4).setValue(channellist[i].usersCount) // ユーザ数
-    channelsheet.getRange(i+channelsheet_row, 5).setValue(channellist[i].notesCount) // ノート数
 
     if(channellist[i].lastNotedAt == null){
       channelsheet.getRange(i+channelsheet_row, 6).setValue("-")//更新がない
@@ -114,7 +117,7 @@ function fetch(instance,isuntilId,untilId,fetchcount) {
     "payload": JSON.stringify(requestbody)
   }
 
-  Utilities.sleep(1000); //
+  Utilities.sleep(500); //
 
   try{
     response = UrlFetchApp.fetch(url, param);
