@@ -53,14 +53,6 @@ function run(){
     channelname = channellist[i].name.replace(/"/g, '""');
     link = `=HYPERLINK("${channellink}", "${channelname}")`;
     channelsheet.getRange(i+channelsheet_row, 2).setFormula(link) // 名前,リンク
-    /*
-
-    if(channellist[i].isSensitive == "TRUE"){// センシティブフラグ
-      channelsheet.getRange(i+channelsheet_row, 4).setBackground("red").setFontColor("white").setValue("Yes") 
-    }else{
-      channelsheet.getRange(i+channelsheet_row, 4).setValue("No")
-    }
-    */
 
     if(channellist[i].lastNotedAt == null){
       channelsheet.getRange(i+channelsheet_row, 6).setValue("-")//更新がない
@@ -72,6 +64,12 @@ function run(){
       }else{
         channelsheet.getRange(i+channelsheet_row, 6).setValue(Math.floor((today - lastnote) / 86400000) + "日前")//更新日
       }
+    }
+
+    if(channellist[i].isSensitive){// センシティブフラグ
+      channelsheet.getRange(i+channelsheet_row, 7).setBackground("red").setFontColor("white").setValue("Yes") 
+    }else{
+      channelsheet.getRange(i+channelsheet_row, 7).setValue("No")
     }
 
     if((i+1)%500 == 0){
